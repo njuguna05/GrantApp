@@ -1,0 +1,19 @@
+# Core Django packages
+Django==4.2 # The version of Django being used for the project
+djangorestframework==3.14.0  # For API handling in the grant management system
+
+# Database adapter for PostgreSQL (adjust if using a different database)
+psycopg2==2.9.7            # PostgreSQL adapter for Django
+
+# Additional packages for common grant management needs
+django-cors-headers==3.14.0    # CORS handling for cross-origin API requests
+django-environ==0.10.0         # Environment-based configuration, for secrets and settings
+djangorestframework-simplejwt==5.2.2   # JWT-based authentication for secure API access
+Pillow==9.3.0                  # Image processing library for handling applicant photos or document images
+
+# Optional packages for improved developer experience and security
+django-extensions==3.1.5      # Provides additional management commands (e.g., for database operations)
+django-filter==23.2            # Filtering support for Django REST Framework
+
+# For documentation (optional, useful if the project includes a browsable API)
+drf-yasg==1.21.5               # Automated API documentation with Swagger and Redoc
