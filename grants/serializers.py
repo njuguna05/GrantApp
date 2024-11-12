@@ -1,5 +1,9 @@
 from rest_framework import serializers
-from .models import User, Grant,GrantType, Application, GrantReview, Disbursement, Document,Beneficiary
+from .models import (User, Grant,GrantType, Application, GrantReview, Disbursement, Document,Beneficiary, GrantCommitment, FundRequest, FundReceipt,
+    Donor, Grantee, GranteeCommitment, GranteeReporting)
+
+
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -7,10 +11,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['user_id', 'username', 'email', 'role']
 
 
-class GrantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Grant
-        fields = ['grant_id', 'title', 'description', 'available_funds', 'status', 'created_at', 'updated_at']
+# class GrantSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Grant
+#         fields = ['grant_id', 'title', 'description', 'available_funds', 'status', 'created_at', 'updated_at']
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
@@ -45,3 +49,61 @@ class GrantTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = GrantType
         fields = ['id', 'name', 'description', 'created_at']
+        
+
+
+
+# Grant Serializer
+class GrantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Grant
+        fields = '__all__'
+
+
+# GrantCommitment Serializer
+class GrantCommitmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GrantCommitment
+        fields = '__all__'
+
+
+# FundRequest Serializer
+class FundRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FundRequest
+        fields = '__all__'
+
+
+# FundReceipt Serializer
+class FundReceiptSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FundReceipt
+        fields = '__all__'
+
+
+# Donor Serializer
+class DonorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Donor
+        fields = '__all__'
+
+
+# Grantee Serializer
+class GranteeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Grantee
+        fields = '__all__'
+
+
+# GranteeCommitment Serializer
+class GranteeCommitmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GranteeCommitment
+        fields = '__all__'
+
+
+# GranteeReporting Serializer
+class GranteeReportingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GranteeReporting
+        fields = '__all__'

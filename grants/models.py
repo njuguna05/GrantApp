@@ -3,6 +3,12 @@ from django.db import models
 from django.utils import timezone
 import uuid
 
+from django.utils import timezone
+
+# from django.contrib.auth import get_user_model
+
+# User = get_user_model()
+
 class User(AbstractUser):
     user_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     ROLE_CHOICES = [
@@ -95,3 +101,105 @@ class GrantType(models.Model):
     # Date information
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+
+
+
+# Updated models with relationship to Grant
+
+# 1. GrantCommitment
+class GrantCommitment(models.Model):
+    commitment_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    grant = models.ForeignKey(Grant, on_delete=models.CASCADE, related_name='commitments')
+    grant_name = models.CharField(max_length=255)
+    total_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    commitment_date = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=50, choices=[('active', 'Active'), ('closed', 'Closed')])
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.grant_name
+
+
+# 2. FundRequest
+class FundRequest(models.Model):
+    request_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    grant = models.ForeignKey(Grant, on_delete=models.CASCADE, related_name='fund_requests')
+    grant_commitment = models.ForeignKey(GrantCommitment, on_delete=models.CASCADE, related_name='fund_requests')
+    requested_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    request_date = models.DateTimeField(default=timezone.now)
+    purpose = models.TextField()
+    status = models.CharField(max_length=50, choices=[('pending', 'Pending'), ('approved', 'Approved'), ('denied', 'Denied')])
+
+    def __str__(self):
+        return f"Request {self.request_id} for {self.grant_commitment.grant_name}"
+
+
+# 3. FundReceipt
+class FundReceipt(models.Model):
+    receipt_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    grant = models.ForeignKey(Grant, on_delete=models.CASCADE, related_name='fund_receipts')
+    grant_commitment = models.ForeignKey(GrantCommitment, on_delete=models.CASCADE, related_name='fund_receipts')
+    received_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    receipt_date = models.DateTimeField(default=timezone.now)
+    received_from = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"Receipt {self.receipt_id} for {self.grant_commitment.grant_name}"
+
+
+# 4. Donor
+class Donor(models.Model):
+    donor_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    name = models.CharField(max_length=255)
+    contact_info = models.TextField()
+    address = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.name
+
+
+# 5. Grantee
+class Grantee(models.Model):
+    grantee_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    contact_person = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
+# 6. GranteeCommitment
+class GranteeCommitment(models.Model):
+    grantee = models.ForeignKey(Grantee, on_delete=models.CASCADE, related_name='commitments')
+    grant = models.ForeignKey(Grant, on_delete=models.CASCADE, related_name='grantee_commitments')
+    grant_commitment = models.ForeignKey(GrantCommitment, on_delete=models.CASCADE, related_name='grantee_commitments')
+    amount_committed = models.DecimalField(max_digits=15, decimal_places=2)
+    commitment_date = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=50, choices=[('active', 'Active'), ('completed', 'Completed')])
+
+    def __str__(self):
+        return f"Commitment of {self.amount_committed} by {self.grantee.name}"
+
+
+# 7. GranteeReporting
+class GranteeReporting(models.Model):
+    report_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    grantee = models.ForeignKey(Grantee, on_delete=models.CASCADE, related_name='reports')
+    grant = models.ForeignKey(Grant, on_delete=models.CASCADE, related_name='grantee_reports')
+    grant_commitment = models.ForeignKey(GrantCommitment, on_delete=models.CASCADE, related_name='reports')
+    report_date = models.DateTimeField(default=timezone.now)
+    period_start = models.DateField()
+    period_end = models.DateField()
+    report_details = models.TextField()
+    status = models.CharField(max_length=50, choices=[('submitted', 'Submitted'), ('reviewed', 'Reviewed'), ('approved', 'Approved')])
+
+    def __str__(self):
+        return f"Report {self.report_id} for {self.grant_commitment.grant_name}"
+
+    
+

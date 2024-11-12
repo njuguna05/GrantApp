@@ -1,6 +1,9 @@
 
 from django.contrib import admin
-from .models import Disbursement, Document, Grant, Beneficiary, GrantType, Application, GrantReview
+from .models import (Disbursement, Document, Grant, Beneficiary, GrantType, Application, GrantReview,GrantCommitment, 
+                     FundRequest, FundReceipt, Donor, Grantee, GranteeCommitment, GranteeReporting, GrantCommitment, FundRequest, FundReceipt,
+    Donor, Grantee, GranteeCommitment, GranteeReporting)
+
 # Register your models here.
 # Register the GrantType model
 class GrantAdmin(admin.ModelAdmin):
@@ -54,6 +57,59 @@ class DocumentAdmin(admin.ModelAdmin):
     search_fields = ('document_id', 'application__id', 'file_name')
     list_filter = ('uploaded_at',)
 
+
+
+
+# @admin.register(Grant)
+# class GrantAdmin(admin.ModelAdmin):
+#     list_display = ('grant_id', 'name', 'start_date', 'end_date', 'total_funding')
+#     search_fields = ('name',)
+
+
+
+class GrantCommitmentAdmin(admin.ModelAdmin):
+    list_display = ('commitment_id', 'grant', 'total_amount', 'commitment_date', 'status')
+    search_fields = ('grant__name', 'status')
+
+
+
+class FundRequestAdmin(admin.ModelAdmin):
+    list_display = ('request_id', 'grant', 'requested_amount', 'request_date', 'status')
+    search_fields = ('grant__name', 'status')
+
+
+
+class FundReceiptAdmin(admin.ModelAdmin):
+    list_display = ('receipt_id', 'grant', 'received_amount', 'receipt_date', 'received_from')
+    search_fields = ('grant__name', 'received_from')
+
+
+
+class DonorAdmin(admin.ModelAdmin):
+    list_display = ('donor_id', 'name', 'email')
+    search_fields = ('name', 'email')
+
+
+
+class GranteeAdmin(admin.ModelAdmin):
+    list_display = ('grantee_id', 'name', 'contact_person', 'email')
+    search_fields = ('name', 'contact_person')
+
+
+
+class GranteeCommitmentAdmin(admin.ModelAdmin):
+    list_display = ('grantee', 'grant', 'amount_committed', 'commitment_date', 'status')
+    search_fields = ('grantee__name', 'grant__name', 'status')
+
+
+
+class GranteeReportingAdmin(admin.ModelAdmin):
+    list_display = ('report_id', 'grantee', 'grant', 'report_date', 'status')
+    search_fields = ('grantee__name', 'grant__name', 'status')
+
+
+
+
 # Registering the models with the admin interface
 admin.site.register(GrantType, GrantTypeAdmin)
 admin.site.register(Beneficiary, BeneficiaryAdmin)
@@ -62,3 +118,10 @@ admin.site.register(Application, ApplicationAdmin)
 admin.site.register(GrantReview, GrantReviewAdmin)
 admin.site.register(Disbursement, DisbursementAdmin)
 admin.site.register(Document, DocumentAdmin)
+admin.site.register(GrantCommitment)
+admin.site.register(FundRequest)
+admin.site.register(FundReceipt)
+admin.site.register(Donor)
+admin.site.register(Grantee)
+admin.site.register(GranteeCommitment)
+admin.site.register(GranteeReporting)
