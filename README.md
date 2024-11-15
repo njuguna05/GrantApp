@@ -48,10 +48,31 @@ Install the required dependencies using pip:
 pip install -r requirements.txt
 
 Step 4: Set Up the Database
+Setting a Password for a PostgreSQL User
+
+There are two primary methods to set a password for a PostgreSQL user:
+
+Method 1: Using the \password Command in psql
+
+    Log in to psql:
+    Bash
+
+    sudo -u postgres psql
+
+    Use code with caution.
+
+Change the password:
+SQL
+
+\password <username>
+
+Use code with caution.
+Replace <username> with the actual username. You'll be prompted to enter the new password twice
 
     Ensure your PostgreSQL (or another database) is set up.
     Update the DATABASES settings in settings.py to match your database configuration.
     Run the migrations to set up the database schema:
+CREATE DATABASE grant_app_db
 
 python manage.py migrate
 
