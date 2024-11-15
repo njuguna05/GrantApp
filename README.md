@@ -39,7 +39,10 @@ python3 -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 
 Step 3: Install Dependencies
-
+sudo apt-get install libpq-dev python3-dev
+pip install psycopg2-binary
+sudo apt update
+sudo apt install postgresql postgresql-contrib
 Install the required dependencies using pip:
 
 pip install -r requirements.txt
